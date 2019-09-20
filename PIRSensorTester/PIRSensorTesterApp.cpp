@@ -45,7 +45,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     recorder->setup(CAM_Width, CAM_Height, VID_FPS, StorePath);
     
 #ifdef USING_PI
-    cout<"PI mode"<<endl;
+    cout<<"PI mode"<<endl;
 #endif
 
     //Loop
