@@ -17,8 +17,9 @@
 
 #define PIR_PIN 15
 
+using namespace std;
+
 void PIRSensorTesterApp::run(int argc, const char * argv[]) {
-    
 
 #ifdef USING_PI
     //Initialize Camera
@@ -45,6 +46,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
     
     //Loop
+    cout<<"Loop started"<<endl;
     int lastStatePirSensor = 0;
     int pirSensorState = 0;
     time_t lastSplitTime = time(0);
@@ -66,13 +68,14 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         if(lastStatePirSensor != pirSensorState) {
             eventOccured = true;
             eventType = (pirSensorState == 1)? "MotionStarted":"MotionEnded";
+            cout<<eventType<<endl;
             lastStatePirSensor = pirSensorState;
         }
         
         //Log event to log file
         if(eventOccured) {
             time_t offsetTime = recorder->frmCount / (double) VID_FPS;
-            string eventStr = utils::strForTime(now) + ", " + eventType + ", " + recorder->vidFPName + ", " + utils::strForTime(offsetTime,"%H:%M:%S") + ", " + to_string(recorder->frmCount);
+            string eventStr = utils::strForTime(now) + ", " + eventType + ", " + recorder->vidFPName + ", " + utils::strForTime(offsetTime,"%H:%M:%S") + ", " + to_string(recorder->frmCount) + "\n";
             logFile<<eventStr;
             logFile.flush();
         }
@@ -102,6 +105,12 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         if(now - lastSplitTime > VID_LengthMin * 60) {
             lastSplitTime = now;
             recorder->splitVideo();
+        }
+        
+        //Loop breaker
+        char ch = (char) cv::waitKey(20);
+        if(ch == 'q') {
+            break;
         }
     }
 }
