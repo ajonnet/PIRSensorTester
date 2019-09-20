@@ -27,6 +27,11 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     piCam->set( CV_CAP_PROP_FRAME_WIDTH, CAM_Width );
     piCam->set( CV_CAP_PROP_FRAME_HEIGHT, CAM_Height );
     piCam->set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+    piCam->set( CV_CAP_PROP_FPS, VID_FPS);
+    
+    //Open camera
+    cout<<"Opening Camera..."<<endl;
+    if (!piCam->open()) {cerr<<"Error opening the camera"<<endl;return -1;}
     
     //Initialize PIRSensor
     wiringPiSetup();
