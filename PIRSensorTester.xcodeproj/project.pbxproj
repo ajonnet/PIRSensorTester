@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		28F84DAF2333F1780025D315 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F84DAE2333F1780025D315 /* main.cpp */; };
+		28F84DB72333F5A20025D315 /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F84DB52333F5A20025D315 /* Recorder.cpp */; };
+		28F84DBA2333F8160025D315 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F84DB82333F8160025D315 /* utils.cpp */; };
+		28F84DBD2333FB140025D315 /* PIRSensorTesterApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F84DBB2333FB140025D315 /* PIRSensorTesterApp.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,12 @@
 /* Begin PBXFileReference section */
 		28F84DAB2333F1770025D315 /* PIRSensorTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PIRSensorTester; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F84DAE2333F1780025D315 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		28F84DB52333F5A20025D315 /* Recorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Recorder.cpp; sourceTree = "<group>"; };
+		28F84DB62333F5A20025D315 /* Recorder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Recorder.hpp; sourceTree = "<group>"; };
+		28F84DB82333F8160025D315 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
+		28F84DB92333F8160025D315 /* utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = utils.hpp; sourceTree = "<group>"; };
+		28F84DBB2333FB140025D315 /* PIRSensorTesterApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PIRSensorTesterApp.cpp; sourceTree = "<group>"; };
+		28F84DBC2333FB140025D315 /* PIRSensorTesterApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PIRSensorTesterApp.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +67,12 @@
 			isa = PBXGroup;
 			children = (
 				28F84DAE2333F1780025D315 /* main.cpp */,
+				28F84DBB2333FB140025D315 /* PIRSensorTesterApp.cpp */,
+				28F84DBC2333FB140025D315 /* PIRSensorTesterApp.hpp */,
+				28F84DB52333F5A20025D315 /* Recorder.cpp */,
+				28F84DB62333F5A20025D315 /* Recorder.hpp */,
+				28F84DB82333F8160025D315 /* utils.cpp */,
+				28F84DB92333F8160025D315 /* utils.hpp */,
 			);
 			path = PIRSensorTester;
 			sourceTree = "<group>";
@@ -119,7 +134,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28F84DBD2333FB140025D315 /* PIRSensorTesterApp.cpp in Sources */,
+				28F84DBA2333F8160025D315 /* utils.cpp in Sources */,
 				28F84DAF2333F1780025D315 /* main.cpp in Sources */,
+				28F84DB72333F5A20025D315 /* Recorder.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +178,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					USING_XCODE,
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -167,9 +186,30 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Amit/include/opencv3.2.0/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lopencv_calib3d",
+					"-lopencv_core",
+					"-lopencv_features2d",
+					"-lopencv_flann",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+					"-lopencv_imgproc",
+					"-lopencv_ml",
+					"-lopencv_objdetect",
+					"-lopencv_photo",
+					"-lopencv_shape",
+					"-lopencv_stitching",
+					"-lopencv_superres",
+					"-lopencv_ts",
+					"-lopencv_video",
+					"-lopencv_videoio",
+					"-lopencv_videostab",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -203,14 +243,36 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = USING_XCODE;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Amit/include/opencv3.2.0/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-lopencv_calib3d",
+					"-lopencv_core",
+					"-lopencv_features2d",
+					"-lopencv_flann",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+					"-lopencv_imgproc",
+					"-lopencv_ml",
+					"-lopencv_objdetect",
+					"-lopencv_photo",
+					"-lopencv_shape",
+					"-lopencv_stitching",
+					"-lopencv_superres",
+					"-lopencv_ts",
+					"-lopencv_video",
+					"-lopencv_videoio",
+					"-lopencv_videostab",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -218,6 +280,10 @@
 		28F84DB32333F1780025D315 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -225,6 +291,7 @@
 		28F84DB42333F1780025D315 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

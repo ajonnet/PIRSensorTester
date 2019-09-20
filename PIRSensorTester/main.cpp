@@ -7,9 +7,16 @@
 //
 
 #include <iostream>
+#include "PIRSensorTesterApp.hpp"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
+    try {
+        PIRSensorTesterApp app;
+        app.run(argc, argv);
+    }catch(...) {
+        std::cout<<"Exiting app, Unkown exception"<<std::endl;
+    }
+    
     return 0;
 }
