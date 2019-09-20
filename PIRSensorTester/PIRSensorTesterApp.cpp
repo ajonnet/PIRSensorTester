@@ -9,8 +9,8 @@
 #include "PIRSensorTesterApp.hpp"
 #include "utils.hpp"
 
-#define CAM_Width 160
-#define CAM_Height 120
+#define CAM_Width 320
+#define CAM_Height 240
 #define VID_FPS 15
 #define VID_LengthMin 30
 #define StorePath "data/"
@@ -47,7 +47,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
     //Initialize Recorder
     recorder = new Recorder();
-    recorder->setup(CAM_Width, CAM_Height, 24, StorePath);
+    recorder->setup(CAM_Width, CAM_Height, VID_FPS, StorePath);
     
 #ifdef USING_PI
     cout<<"PI mode"<<endl;
@@ -106,7 +106,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         int fontFace = cv::FONT_HERSHEY_SIMPLEX;
         cv::Scalar color = cv::Scalar(0,200,200);
         cv::Size text_size = cv::getTextSize(msg,fontFace,fontScale,thickness,&baseline);
-        cv::Point textPos = cv::Point(inpFrame.cols - text_size.width ,2 + (text_size.height/2));
+        cv::Point textPos = cv::Point(inpFrame.cols - text_size.width ,10 + (text_size.height/2));
         cv::putText(inpFrame, msg, textPos, fontFace, fontScale, color, 1);
     
         //Record frame
