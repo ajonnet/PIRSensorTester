@@ -10,6 +10,7 @@
 #define utils_hpp
 
 #include <iostream>
+#include <iomanip>
 #include <opencv2/opencv.hpp>
 
 class utils {
