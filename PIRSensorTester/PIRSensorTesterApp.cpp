@@ -11,7 +11,7 @@
 
 #define CAM_Width 160
 #define CAM_Height 120
-#define VID_FPS 10
+#define VID_FPS 15
 #define VID_LengthMin 30
 #define StorePath "data/"
 
@@ -47,7 +47,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
     //Initialize Recorder
     recorder = new Recorder();
-    recorder->setup(CAM_Width, CAM_Height, VID_FPS, StorePath);
+    recorder->setup(CAM_Width, CAM_Height, 24, StorePath);
     
 #ifdef USING_PI
     cout<<"PI mode"<<endl;
@@ -86,7 +86,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         //Log event to log file
         if(eventOccured) {
             time_t offsetTime = recorder->frmCount / (double) VID_FPS;
-            string eventStr = utils::strForTime(now) + ", " + eventType + ", " + recorder->vidFPName + ", " + utils::strForTime(offsetTime,"%H:%M:%S") + ", " + to_string(recorder->frmCount) + "\n";
+            string eventStr = utils::strForTime(now) + ", " + eventType + ", " + recorder->vidFPName + ", " + to_string(offsetTime) + ", " + to_string(recorder->frmCount) + "\n";
             logFile<<eventStr;
             logFile.flush();
         }
@@ -101,12 +101,12 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         //Show current time on inpFrame
         string msg = utils::strForTime(now,"%H:%M:%S");
         int baseline=0;
-        double fontScale = 0.4;
+        double fontScale = 0.3;
         int thickness = 1;
         int fontFace = cv::FONT_HERSHEY_SIMPLEX;
         cv::Scalar color = cv::Scalar(0,200,200);
         cv::Size text_size = cv::getTextSize(msg,fontFace,fontScale,thickness,&baseline);
-        cv::Point textPos = cv::Point(inpFrame.cols - text_size.width ,2);
+        cv::Point textPos = cv::Point(inpFrame.cols - text_size.width ,2 + (text_size.height/2));
         cv::putText(inpFrame, msg, textPos, fontFace, fontScale, color, 1);
     
         //Record frame
@@ -119,8 +119,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         }
         
         //Loop breaker
-        char ch = (char) cv::waitKey(20);
-        if(ch == 'q') {
+        int ch = cv::waitKey(33);
+        if(ch == 27) {
             break;
         }
     }
