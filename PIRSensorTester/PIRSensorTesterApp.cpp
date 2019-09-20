@@ -31,7 +31,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
     //Open camera
     cout<<"Opening Camera..."<<endl;
-    if (!piCam->open()) {cerr<<"Error opening the camera"<<endl;return -1;}
+    if (!piCam->open()) {cerr<<"Error opening the camera"<<endl; return;}
     
     //Initialize PIRSensor
     wiringPiSetup();
