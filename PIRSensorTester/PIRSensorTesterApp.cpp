@@ -52,8 +52,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     while(true) {
 #ifdef USING_PI
         //Grab frame from camera
-        if(!piCam.grab()) continue;
-        piCam.retrieve(inpFrame);
+        if(!piCam->grab()) continue;
+        piCam->retrieve(inpFrame);
 
         //Check state of PIR Sensor
         pirSensorState = digitalRead (PIR_PIN);
