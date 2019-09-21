@@ -13,7 +13,7 @@
 #define CAM_Height 240
 #define VID_FPS 15
 #define VID_LengthMin 30
-#define StorePath "data/"
+#define StorePath "/home/pi/data/"
 
 #define PIR_PIN 15
 
