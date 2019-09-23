@@ -97,7 +97,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     int pirSensorState = 0;
     time_t lastSplitTime = time(0);
     time_t lastIRSignalTxTime = time(0);
-    int irTxIntervalTimeMin = 0.25;
+    double irTxIntervalTimeMin = 0.25;
     cv::Mat inpFrame;
     while(true) {
 #ifdef USING_PI
@@ -162,7 +162,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         
         //Send IR Signal to turn off AC, if no motion found
         if(pirSensorState == 0 &&
-           (now - lastIRSignalTxTime) > (irTxIntervalTimeMin * 60)) {
+           ((now - lastIRSignalTxTime) > (irTxIntervalTimeMin * 60))
+           ) {
             int freq = 38000;
             double dutyCycle = 0.5;
             
