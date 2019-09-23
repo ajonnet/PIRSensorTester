@@ -207,6 +207,7 @@ PIRSensorTesterApp::~PIRSensorTesterApp() {
 vector<vector<int>> PIRSensorTesterApp::loadIRCodes(string fPath) {
     cout<<"Loading irCodes from file: "<<fPath<<endl;
     
+    vector<vector<int>> _irCodes;
     ifstream irCodesFile(fPath);
     string entry;
     while(getline(irCodesFile,entry)) {
@@ -231,7 +232,7 @@ vector<vector<int>> PIRSensorTesterApp::loadIRCodes(string fPath) {
         cout<<"IR_CODE("<<irCode.size()<<"): ";
         for(int i=0; i<irCode.size(); i++) cout<<irCode[i]<<", ";
         
-        irCodes.push_back(irCode);
+        _irCodes.push_back(irCode);
     }
     irCodesFile.close();
 }
