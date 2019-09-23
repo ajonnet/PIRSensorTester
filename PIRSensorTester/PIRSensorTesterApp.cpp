@@ -97,7 +97,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     int pirSensorState = 0;
     time_t lastSplitTime = time(0);
     time_t lastIRSignalTxTime = time(0);
-    double irTxIntervalTimeMin = 0.25;
+    double irTxIntervalTimeMin = 1;
     cv::Mat inpFrame;
     while(true) {
 #ifdef USING_PI
