@@ -28,15 +28,104 @@ string utils::strForTime(struct std::tm timeVal, string frmt) {
     return timeStr;
 }
 
-cv::Mat utils::imgWithText(std::string msg, cv::Mat img, cv::Scalar color, double _fontScale) {
+bool utils::parseTimeStr(string timeStr, time_t &t, string frmt) {
     
-    int baseline=0;
-    double fontScale = _fontScale;
-    int thickness = 1;
-    int fontFace = cv::FONT_HERSHEY_SIMPLEX;
+    time_t _t = 0;
+    bool timeParsingSuccess = false;
+    int crossCheckCount = 0;
+    while(true) {
+        //Prepare TM structure for current time
+        std::time_t _now = std::time(0);
+        std::tm* _nowTM = std::localtime(&_now);
+        _nowTM->tm_isdst = 0;
+        
+        //Parse time from string
+        struct std::tm _TM;
+        _TM = *_nowTM;
+        bool tpSuccess = utils::parseTimeStr(timeStr,_TM,frmt);
+        if(!tpSuccess) {
+            cout<<"Parsing failed for time string. "<<timeStr<<endl;
+            break;
+        }
+        
+        _t = mktime(&_TM);
+        
+        //Regenerate time string
+        string _timeStr = utils::strForTime(_t,frmt);
+        
+        //Cross check
+        //cout<<timeStr<<"\t"<<_timeStr<<endl;
+        if(timeStr.compare(_timeStr) == 0){
+            timeParsingSuccess = true;
+            break;
+        }
+        
+        if(crossCheckCount++ > 5) {
+            break;
+        }
+    }
+    //cout<<"-->"<<crossCheckCount<<endl;
+    if(timeParsingSuccess) t = _t;
     
-    cv::Size text_size = cv::getTextSize(msg,fontFace,fontScale,thickness,&baseline);
-    cv::Point textPos = cv::Point(2,img.rows - text_size.height);
-    cv::putText(img, msg, textPos, fontFace, fontScale, color, 1);
-    return img;
+    return timeParsingSuccess;
+}
+
+bool utils::parseTimeStr(string timeStr, struct std::tm &TM, string frmt) {
+#ifdef TARGET_WIN32
+    bool parsingSucceded = true;
+    
+    std::time_t _now = std::time(0);
+    std::tm* _nowTM = std::localtime(&_now);
+    if(frmt.compare("%Y%m%d_%H%M%S") == 0) {
+        unsigned int year, month, date, hour, min, sec;
+        sscanf(timeStr.c_str(), "%4u%2u%2u_%2u%2u%2u",&year,&month,&date,&hour,&min,&sec);
+        TM = *_nowTM;
+        TM.tm_year = year - 1900;
+        TM.tm_mon = month -1;
+        TM.tm_mday = date;
+        TM.tm_hour = hour;
+        TM.tm_min = min;
+        TM.tm_sec = sec;
+        
+        //Cross check
+        std::time_t tepoch = mktime(&TM);
+        string opStr = utils::strForTime(tepoch, frmt);
+        assert(timeStr == opStr);
+        
+    }else if(frmt.compare("%H:%M") == 0) {
+        unsigned int hour, min;
+        sscanf(timeStr.c_str(), "%2u:%2u",&hour,&min);
+        TM = *_nowTM;
+        TM.tm_hour = hour;
+        TM.tm_min = min;
+        
+        //Cross check
+        std::time_t tepoch = mktime(&TM);
+        string opStr = utils::strForTime(tepoch, frmt);
+        assert(timeStr == opStr);
+        
+    }else {
+        cout<<"Unsuported dateTime format: "<<frmt<<endl;
+        parsingSucceded = false;
+    }
+    
+    return parsingSucceded;
+#else
+    bool timeParsingSuccess = true;
+    
+    //Prepare TM structure for current time
+    std::time_t _now = std::time(0);
+    std::tm* _nowTM = std::localtime(&_now);
+    _nowTM->tm_isdst = 0;
+    
+    //Parse time from string
+    TM = *_nowTM;
+    char *tpSuccess = strptime(timeStr.c_str(), frmt.c_str(), &TM);
+    if(!tpSuccess) {
+        //cout<<"Parsing failed for time string. "<<timeStr<<endl;
+        timeParsingSuccess = false;
+    }
+    
+    return timeParsingSuccess;
+#endif
 }

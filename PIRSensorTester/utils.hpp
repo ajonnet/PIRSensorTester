@@ -11,13 +11,12 @@
 
 #include <iostream>
 #include <iomanip>
-#include <opencv2/opencv.hpp>
 
 class utils {
 public:
     static std::string strForTime(time_t timeVal, std::string frmt="%Y%m%d_%H%M%S");
     static std::string strForTime(struct std::tm timeVal, std::string frmt="%Y%m%d_%H%M%S");
-    
-    static cv::Mat imgWithText(std::string msg, cv::Mat img, cv::Scalar color = cv::Scalar(0,200,200), double fontScale = 0.4);
+    static bool parseTimeStr(std::string timeStr, time_t &t, std::string frmt="%Y%m%d_%H%M%S");
+    static bool parseTimeStr(std::string timeStr, struct std::tm &TM, std::string frmt="%Y%m%d_%H%M%S");
 };
 #endif /* utils_hpp */
