@@ -32,6 +32,7 @@ private:
 #ifdef USING_PI
     cv::Ptr<raspicam::RaspiCam_Cv> piCam;
 #endif
+    vector<vector<int>> irCodes;
     cv::Ptr<Recorder> recorder;
     ofstream logFile;
 };
