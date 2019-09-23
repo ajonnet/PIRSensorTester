@@ -230,9 +230,11 @@ vector<vector<int>> PIRSensorTesterApp::loadIRCodes(string fPath) {
         
         //Logging IRCode to console
         cout<<"IR_CODE("<<irCode.size()<<"): ";
-        for(int i=0; i<irCode.size(); i++) cout<<irCode[i]<<", ";
+        for(int i=0; i<irCode.size() - 1; i++) cout<<irCode[i]<<", ";
+        cout<<irCode[irCode.size()-1]<<endl;
         
         _irCodes.push_back(irCode);
     }
     irCodesFile.close();
+    return _irCodes;
 }
