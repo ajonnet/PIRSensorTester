@@ -22,7 +22,7 @@
 
 #ifdef PIGPIO_ENABLED
 #include <pigpio.h>
-#inlcude "irslinger.h"  //For sending IR AC_OFF signal
+#include "irslinger.h"  //For sending IR AC_OFF signal
 #endif
 
 
