@@ -233,4 +233,5 @@ vector<vector<int>> PIRSensorTesterApp::loadIRCodes(string fPath) {
         
         irCodes.push_back(irCode);
     }
+    irCodesFile.close();
 }
