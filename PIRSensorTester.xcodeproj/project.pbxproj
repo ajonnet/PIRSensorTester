@@ -47,6 +47,7 @@
 		28F84DBC2333FB140025D315 /* PIRSensorTesterApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PIRSensorTesterApp.hpp; sourceTree = "<group>"; };
 		28F84DD9233630410025D315 /* TimeDelayTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TimeDelayTester; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F84DDB233630410025D315 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		28F84DE5233916180025D315 /* irslinger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = irslinger.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +89,7 @@
 		28F84DAD2333F1770025D315 /* PIRSensorTester */ = {
 			isa = PBXGroup;
 			children = (
+				28F84DE5233916180025D315 /* irslinger.h */,
 				28F84DAE2333F1780025D315 /* main.cpp */,
 				28F84DBB2333FB140025D315 /* PIRSensorTesterApp.cpp */,
 				28F84DBC2333FB140025D315 /* PIRSensorTesterApp.hpp */,
@@ -407,6 +409,7 @@
 				28F84DDF233630410025D315 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

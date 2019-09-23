@@ -35,11 +35,11 @@ void timeDelayEval() {
     time_t endTS = 0;
     int skippedMSEventCount = 0;
     while(getline(logFile,entry)) {
-        if(trim(entry).length() == 0) continue;
+        if(utils::trim(entry).length() == 0) continue;
         
-        vector<string> parts = Split(entry, ",");
-        string timeStr = trim(parts[0]);
-        string eventType = trim(parts[1]);
+        vector<string> parts = utils::Split(entry, ",");
+        string timeStr = utils::trim(parts[0]);
+        string eventType = utils::trim(parts[1]);
         
         time_t tSecs = 0;
         utils::parseTimeStr(timeStr, tSecs);
@@ -74,38 +74,4 @@ void timeDelayEval() {
     for(auto entry:eventsNew) {
         cout<<++i<<"-"<<entry<<endl;
     }
-}
-
-vector<string> Split(string mystring, string delimiter)
-{
-    vector<string> subStringList;
-    string token;
-    while (true)
-    {
-        size_t findfirst = mystring.find_first_of(delimiter);
-        if (findfirst == string::npos) //find_first_of returns npos if it couldn't find the delimiter anymore
-        {
-            subStringList.push_back(mystring); //push back the final piece of mystring
-            return subStringList;
-        }
-        token = mystring.substr(0, mystring.find_first_of(delimiter));
-        mystring = mystring.substr(mystring.find_first_of(delimiter) + 1);
-        subStringList.push_back(token);
-    }
-    return subStringList;
-}
-
-std::string trim(std::string &line){
-    if(line.length() == 0) return line;
-    
-    auto val = line.find_last_not_of(" \n\r\t") + 1;
-    
-    if(val == line.size() || val == std::string::npos){
-        val = line.find_first_not_of(" \n\r\t");
-        line = line.substr(val);
-    }
-    else
-        line.erase(val);
-    
-    return line;
 }

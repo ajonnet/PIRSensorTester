@@ -15,17 +15,18 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include "Recorder.hpp"
 
 #ifdef USING_PI
 #include <raspicam/raspicam_cv.h>
-#include <wiringPi.h>
 #endif
 
 class PIRSensorTesterApp {
 public:
     void run(int argc, const char * argv[]);
+    vector<vector<int>> loadIRCodes(string fPath);
     ~PIRSensorTesterApp();
 private:
 #ifdef USING_PI
