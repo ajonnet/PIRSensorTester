@@ -42,6 +42,12 @@
 using namespace std;
 
 void PIRSensorTesterApp::run(int argc, const char * argv[]) {
+    debugMode = false;
+    if(argc >1 ) {
+        debugMode = true;
+        cout<<"[DEBUG MODE]"<<endl;
+    }
+    
 #ifdef USING_PI
     //Initialize Camera
     piCam = new raspicam::RaspiCam_Cv();
@@ -76,6 +82,15 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     //Load IR Codes
     irCodes = loadIRCodes(IRCodesFPath);
     cout<<"Number of IRCodes loaded: "<<irCodes.size()<<endl;
+
+#ifdef PIGPIO_ENABLED
+    if(debugMode) {
+        txIRSignal();
+        gpioTerminate();
+        cout<<"Exiting"<<endl;
+        std::exit(0);
+    }
+#endif
     
     //Initialize Logfile
     time_t now = time(0);
@@ -164,15 +179,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         if(pirSensorState == 0 &&
            ((now - lastIRSignalTxTime) > (irTxIntervalTimeMin * 60))
            ) {
-            int freq = 38000;
-            double dutyCycle = 0.5;
-            
-            cout<<"Sending IR Signal"<<endl;
-            for(int i=0; i< irCodes.size(); i++) {
-                irSlingRaw(IR_TX_PIN, freq, dutyCycle, irCodes[i].data(), irCodes[i].size());
-                cout<<"IR Code "<<i+1<<" sent"<<endl;
-            }
-            cout<<"IR Signal transmitted"<<endl;
+            txIRSignal();
             lastIRSignalTxTime = now;
         }
         
@@ -192,6 +199,18 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
 #ifdef PIGPIO_ENABLED
     gpioTerminate();
 #endif
+}
+
+void PIRSensorTesterApp::txIRSignal() {
+    int freq = 38000;
+    double dutyCycle = 0.5;
+    
+    cout<<"Sending IR Signal"<<endl;
+    for(int i=0; i< irCodes.size(); i++) {
+        irSlingRaw(IR_TX_PIN, freq, dutyCycle, irCodes[i].data(), irCodes[i].size());
+        cout<<"IR Code "<<i+1<<" sent"<<endl;
+    }
+    cout<<"IR Signal transmitted"<<endl;
 }
 
 PIRSensorTesterApp::~PIRSensorTesterApp() {

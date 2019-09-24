@@ -27,6 +27,7 @@ class PIRSensorTesterApp {
 public:
     void run(int argc, const char * argv[]);
     vector<vector<int>> loadIRCodes(string fPath);
+    void txIRSignal();
     ~PIRSensorTesterApp();
 private:
 #ifdef USING_PI
@@ -35,6 +36,7 @@ private:
     vector<vector<int>> irCodes;
     cv::Ptr<Recorder> recorder;
     ofstream logFile;
+    bool debugMode;
 };
 
 #endif /* PIRSensorTesterApp_hpp */
