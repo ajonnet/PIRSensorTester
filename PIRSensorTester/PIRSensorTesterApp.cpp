@@ -166,7 +166,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
             lastMotionDetectedTime = now;
         }
         
-        if((now - lastMotionDetectedTime) > maxIdleDelayMins*60)) {
+        if((now - lastMotionDetectedTime) > maxIdleDelayMins*60) {
             if(turnOffAC == false) cout<<"Turning AC off..."<<endl;
             turnOffAC = true;
         }else {
