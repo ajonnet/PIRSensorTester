@@ -42,11 +42,22 @@
 using namespace std;
 
 void PIRSensorTesterApp::run(int argc, const char * argv[]) {
+    
     debugMode = false;
+    int maxIdleDelayMins = 10;
     if(argc >1 ) {
-        debugMode = true;
-        cout<<"[DEBUG MODE]"<<endl;
+        if(strcmp(argv[1], "d") == 0 ||
+           strcmp(argv[1], "D") == 0) {
+            debugMode = true;
+            cout<<"[DEBUG MODE]"<<endl;
+        }
+        
+        if(argc >2) {
+            maxIdleDelayMins = stoi(argv[2]);
+        }
     }
+    cout<<"MaxIdleDelay: "<<maxIdleDelayMins<<" mins"<<endl;
+    
     
 #ifdef USING_PI
     //Initialize Camera
@@ -67,7 +78,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
 #ifdef WIRINGPI_ENABLED
     //Initialize PIRSensor
     wiringPiSetupGpio();
-    pinMode(PIR_PIN,INPUT) ;
+    pinMode(PIR_PIN,INPUT);
 #endif
     
 #ifdef PIGPIO_ENABLED
@@ -106,12 +117,15 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     cout<<"PI mode"<<endl;
 #endif
 
+    bool turnOffAC = false;
+    
     //Loop
     cout<<"Loop started"<<endl;
     int lastStatePirSensor = 0;
     int pirSensorState = 0;
     time_t lastSplitTime = time(0);
     time_t lastIRSignalTxTime = time(0);
+    time_t lastMotionDetectedTime = -1;
     double irTxIntervalTimeMin = 1;
     cv::Mat inpFrame;
     while(true) {
@@ -146,6 +160,16 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
             lastStatePirSensor = pirSensorState;
         }
         
+        if(pirSensorState == 1 || lastMotionDetectedTime == -1) {
+            lastMotionDetectedTime = now;
+        }
+        
+        if((lastMotionDetectedTime - now) > maxIdleDelayMins*60) {
+            turnOffAC = true;
+        }else {
+            turnOffAC = false;
+        }
+        
         //Log event to log file
         if(eventOccured) {
             time_t offsetTime = recorder->frmCount / (double) VID_FPS;
@@ -176,7 +200,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         recorder->write(inpFrame);
         
         //Send IR Signal to turn off AC, if no motion found
-        if(pirSensorState == 0 &&
+        if(turnOffAC &&
            ((now - lastIRSignalTxTime) > (irTxIntervalTimeMin * 60))
            ) {
             txIRSignal();
