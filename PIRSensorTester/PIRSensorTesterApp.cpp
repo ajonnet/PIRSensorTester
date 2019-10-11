@@ -175,7 +175,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
             bool roomOccupied = false;
             if(countMotionStartDetected > 1) roomOccupied = true;
             
-            cout<<"Occupency check: "<<((roomOccupied)?"Occupied":"Not Occupied")<<", "<<countMotionStartDetected<<endl;
+            cout<<"Occupancy check: "<<((roomOccupied)?"Occupied":"Not Occupied")<<", "<<countMotionStartDetected<<endl;
             if(roomOccupied) lastOccupiedDetectedTime = now;
             
             lastOccupancyCheckTime = now;
