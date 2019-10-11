@@ -120,6 +120,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
 #endif
 
     bool turnOffAC = false;
+    double occupancyCheckIntervalMin = 1;
     
     //Loop
     cout<<"Loop started"<<endl;
@@ -128,7 +129,10 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     time_t lastSplitTime = time(0);
     time_t lastIRSignalTxTime = time(0);
     time_t lastMotionDetectedTime = -1;
-    double irTxIntervalTimeMin = 1;
+    double irTxIntervalTimeMin = 2;
+    time_t lastOccupancyCheckTime=time(0);
+    int countMotionStartDetected = 0;
+    time_t lastOccupiedDetectedTime = time(0);
     cv::Mat inpFrame;
     while(true) {
 #ifdef USING_PI
@@ -160,17 +164,40 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
             eventType = (pirSensorState == 1)? "MotionStarted":"MotionEnded";
             cout<<eventType<<endl;
             lastStatePirSensor = pirSensorState;
+            if(pirSensorState == 1) countMotionStartDetected++;
         }
         
-        if(pirSensorState == 1 || lastMotionDetectedTime == -1) {
-            lastMotionDetectedTime = now;
+        
+        //Check for occupancy behaviour
+        if(now - lastOccupancyCheckTime > occupancyCheckIntervalMin*60) {
+            
+            //Occupancy check logic
+            bool roomOccupied = false;
+            if(countMotionStartDetected > 1) roomOccupied = true;
+            
+            cout<<"Occupency check: "<<((roomOccupied)?"Occupied":"Not Occupied")<<", "<<countMotionStartDetected<<endl;
+            if(roomOccupied) lastOccupiedDetectedTime = now;
+            
+            lastOccupancyCheckTime = now;
+            countMotionStartDetected = 0;
         }
         
-        if((now - lastMotionDetectedTime) > maxIdleDelayMins*60) {
+        //Check if AC is supposed turn off
+        if((now - lastOccupiedDetectedTime) > maxIdleDelayMins*60) {
             if(turnOffAC == false) cout<<"Turning AC off..."<<endl;
             turnOffAC = true;
         }else {
             turnOffAC = false;
+        }
+        
+        //Send IR Signal to turn off AC, if no motion found
+        if(turnOffAC) {
+            time_t timeElapsed = now - lastIRSignalTxTime;
+            //cout<<"TimeElapsed: "<<timeElapsed<<" / "<<irTxIntervalTimeMin * 60<<endl;
+            if(timeElapsed > (irTxIntervalTimeMin * 60)) {
+                txIRSignal();
+                lastIRSignalTxTime = now;
+            }
         }
         
         //Log event to log file
@@ -201,16 +228,6 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
         //Record frame
         recorder->write(inpFrame);
-        
-        //Send IR Signal to turn off AC, if no motion found
-        if(turnOffAC) {
-            time_t timeElapsed = now - lastIRSignalTxTime;
-            //cout<<"TimeElapsed: "<<timeElapsed<<" / "<<irTxIntervalTimeMin * 60<<endl;
-            if(timeElapsed > (irTxIntervalTimeMin * 60)) {
-                txIRSignal();
-                lastIRSignalTxTime = now;
-            }
-        }
         
         //Split video file check
         if(now - lastSplitTime > VID_LengthMin * 60) {
