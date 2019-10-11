@@ -166,6 +166,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         
         if((lastMotionDetectedTime - now) > maxIdleDelayMins*60) {
             turnOffAC = true;
+            cout<<"Turning of AC..."<<endl;
         }else {
             turnOffAC = false;
         }
@@ -200,11 +201,13 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         recorder->write(inpFrame);
         
         //Send IR Signal to turn off AC, if no motion found
-        if(turnOffAC &&
-           ((now - lastIRSignalTxTime) > (irTxIntervalTimeMin * 60))
-           ) {
-            txIRSignal();
-            lastIRSignalTxTime = now;
+        if(turnOffAC) {
+            time_t timeElapsed = now - lastIRSignalTxTime;
+            cout<<"TimeElapsed: "<<timeElapsed<<" / "<<irTxIntervalTimeMin * 60<<endl;
+            if(timeElapsed > (irTxIntervalTimeMin * 60)) {
+                txIRSignal();
+                lastIRSignalTxTime = now;
+            }
         }
         
         //Split video file check
