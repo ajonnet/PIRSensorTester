@@ -1,0 +1,4 @@
+#!/bin/sh
+export SERVICE=$(basename $(dirname $PWD))
+exec logger -t $SERVICE
+

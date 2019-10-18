@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /home/pi/PIRSensorTester 2>&1
