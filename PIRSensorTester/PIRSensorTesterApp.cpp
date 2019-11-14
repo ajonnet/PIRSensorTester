@@ -167,13 +167,15 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         
         now = time(0);
         
+        cout<<"PIR_State [0]: "<<pir0SensorState<<", [1]:"<<pir1SensorState<<", [2]:"<<pir2SensorState<<endl;
+        
         //PIR sensor state check
         bool eventOccured = false;
         string eventType = "";
         if(lastStatePirSensor != pirSensorState) {
             eventOccured = true;
             eventType = (pirSensorState == 1)? "MotionStarted":"MotionEnded";
-            cout<<eventType<<", [0]:"<<pir0SensorState<<", [1]:"<<pir1SensorState<<", [2]:"<<pir2SensorState<<endl;
+            cout<<eventType<<endl;
             lastStatePirSensor = pirSensorState;
             if(pirSensorState == 1) countMotionStartDetected++;
         }
