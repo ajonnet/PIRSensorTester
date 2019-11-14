@@ -33,10 +33,10 @@
 #define StorePath "/home/pi/data/"
 #define IRCodesFPath "/home/pi/data/irCodes.txt"
 
-#define PIR1_PIN 3  //Gray
+#define PIR1_PIN 17 //Gray
 #define PIR2_PIN 4  //Purple
 #define PIR_PIN 14
-#define IR_TX_PIN 17  //4
+#define IR_TX_PIN 3  //4
 
 #define ITER 6
 
