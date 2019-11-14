@@ -154,7 +154,10 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
 
 #ifdef WIRINGPI_ENABLED
         //Check state of PIR Sensor
-        pirSensorState = digitalRead (PIR_PIN);
+        pir0SensorState = digitalRead (PIR_PIN);
+        pir1SensorState = digitalRead (PIR1_PIN);
+        pir2SensorState = digitalRead (PIR2_PIN);
+        pirSensorState = pir0SensorState || pir1SensorState || pir2SensorState;
 #endif
 
 #ifdef PIGPIO_ENABLED
