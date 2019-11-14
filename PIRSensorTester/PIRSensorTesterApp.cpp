@@ -33,10 +33,12 @@
 #define StorePath "/home/pi/data/"
 #define IRCodesFPath "/home/pi/data/irCodes.txt"
 
+#define PIR1_PIN 3  //Gray
+#define PIR2_PIN 4  //Purple
 #define PIR_PIN 14
-#define IR_TX_PIN 4
+#define IR_TX_PIN 17  //4
 
-#define ITER 4
+#define ITER 5
 
 //int codes[] = {1036, 540, 1012, 564, 1036, 2516, 1012, 2536, 1012, 564, 1012, 564, 1036, 2516, 1012, 2536, 1012, 2540, 1012, 2540, 1036, 2516, 1012, 564, 1008, 2544, 1008, 568, 1012, 560, 1036, 544, 1036, 540, 1012, 564, 1012, 564, 1036, 540, 1036, 2516, 1008, 568, 1012, 564, 1012, 564, 1012, 564, 1012, 564, 1012, 564, 1012, 2540, 1012, 2536, 1012, 2540, 1012, 2540, 1012, 564, 1012, 564, 1012, 564, 1012, 2540, 1012, 2536, 1012, 2540, 1012, 564, 1012, 2540, 1012, 2540, 1012, 564, 1012, 568, 1008, 2540, 1012, 2540, 1012, 2540, 1012, 592, 984, 2540, 1012, 2536, 1016, 588, 1012, 564, 988, 2540, 1012, 2536, 1016, 2536, 1040, 560, 1020, 2508, 1044, 2504, 1076, 528, 1048, 528, 1024, 556, 1020, 2504, 1076, 528, 1048, 528, 1048, 528, 1048, 2476, 1076, 528, 1048, 528, 1048, 2476, 1076, 528, 1048, 528, 1052, 524, 1052, 524, 1052, 524, 1052, 2472, 1076, 2476, 1072, 532, 1048, 2476, 1068, 2484, 1040, 2508, 1040, 540, 1036, 540, 1036};
 
@@ -81,6 +83,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     //Initialize PIRSensor
     wiringPiSetupGpio();
     pinMode(PIR_PIN,INPUT);
+    pinMode(PIR1_PIN,INPUT);
+    pinMode(PIR2_PIN,INPUT);
 #endif
     
 #ifdef PIGPIO_ENABLED
@@ -90,6 +94,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         std::exit(1);
     }
     gpioSetMode(PIR_PIN, PI_INPUT);
+    gpioSetMode(PIR1_PIN, PI_INPUT);
+    gpioSetMode(PIR2_PIN, PI_INPUT);
 #endif
     
     //Load IR Codes
@@ -124,6 +130,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
     
     //Loop
     cout<<"Loop started"<<endl;
+    int pir0SensorState,pir1SensorState,pir2SensorState;
+    pir0SensorState = pir1SensorState = pir2SensorState = 0;
     int lastStatePirSensor = 0;
     int pirSensorState = 0;
     time_t lastSplitTime = time(0);
@@ -151,7 +159,10 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
 
 #ifdef PIGPIO_ENABLED
         //Check state of PIR Sensor
-        pirSensorState = gpioRead (PIR_PIN);
+        pir0SensorState = gpioRead (PIR_PIN);
+        pir1SensorState = gpioRead (PIR_PIN);
+        pir2SensorState = gpioRead (PIR_PIN);
+        pirSensorState = pir0SensorState || pir1SensorState || pir2SensorState;
 #endif
         
         now = time(0);
@@ -162,7 +173,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         if(lastStatePirSensor != pirSensorState) {
             eventOccured = true;
             eventType = (pirSensorState == 1)? "MotionStarted":"MotionEnded";
-            cout<<eventType<<endl;
+            cout<<eventType<<", [0]:"<<pir0SensorState<<", [1]:"<<pir1SensorState<<", [2]:"<<pir2SensorState<<endl;
             lastStatePirSensor = pirSensorState;
             if(pirSensorState == 1) countMotionStartDetected++;
         }
@@ -180,25 +191,27 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
             
             lastOccupancyCheckTime = now;
             countMotionStartDetected = 0;
-        }
         
-        //Check if AC is supposed turn off
-        if((now - lastOccupiedDetectedTime) > maxIdleDelayMins*60) {
-            if(turnOffAC == false) cout<<"Turning AC off..."<<endl;
-            turnOffAC = true;
-        }else {
-            turnOffAC = false;
-        }
-        
-        //Send IR Signal to turn off AC, if no motion found
-        if(turnOffAC) {
-            time_t timeElapsed = now - lastIRSignalTxTime;
-            //cout<<"TimeElapsed: "<<timeElapsed<<" / "<<irTxIntervalTimeMin * 60<<endl;
-            if(timeElapsed > (irTxIntervalTimeMin * 60)) {
-                txIRSignal();
-                lastIRSignalTxTime = now;
+            
+            //Check if AC is supposed turn off
+            if((now - lastOccupiedDetectedTime) > maxIdleDelayMins*60) {
+                if(turnOffAC == false) cout<<"Turning AC off..."<<endl;
+                turnOffAC = true;
+            }else {
+                turnOffAC = false;
+            }
+            
+            //Send IR Signal to turn off AC, if no motion found
+            if(turnOffAC) {
+                time_t timeElapsed = now - lastIRSignalTxTime;
+                //cout<<"TimeElapsed: "<<timeElapsed<<" / "<<irTxIntervalTimeMin * 60<<endl;
+                if(timeElapsed > (irTxIntervalTimeMin * 60)) {
+                    txIRSignal();
+                    lastIRSignalTxTime = now;
+                }
             }
         }
+        
         
         //Log event to log file
         if(eventOccured) {
