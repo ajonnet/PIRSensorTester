@@ -33,8 +33,8 @@
 #define StorePath "/home/pi/data/"
 #define IRCodesFPath "/home/pi/data/irCodes.txt"
 
-#define PIR1_PIN 17 //Gray
-#define PIR2_PIN 4  //Purple
+#define PIR1_PIN 23 //Gray
+#define PIR2_PIN 24  //Purple
 #define PIR_PIN 14
 #define IR_TX_PIN 3  //4
 
@@ -157,7 +157,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         pir0SensorState = digitalRead (PIR_PIN);
         pir1SensorState = digitalRead (PIR1_PIN);
         pir2SensorState = digitalRead (PIR2_PIN);
-        pirSensorState = pir0SensorState || pir1SensorState || pir2SensorState;
+        pirSensorState = pir1SensorState || pir2SensorState;
 #endif
 
 #ifdef PIGPIO_ENABLED
@@ -165,7 +165,7 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         pir0SensorState = gpioRead (PIR_PIN);
         pir1SensorState = gpioRead (PIR1_PIN);
         pir2SensorState = gpioRead (PIR2_PIN);
-        pirSensorState = pir0SensorState || pir1SensorState || pir2SensorState;
+        pirSensorState =  pir1SensorState || pir2SensorState;
 #endif
         
         now = time(0);
