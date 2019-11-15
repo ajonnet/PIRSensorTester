@@ -94,8 +94,8 @@ void PIRSensorTesterApp::run(int argc, const char * argv[]) {
         std::exit(1);
     }
     gpioSetMode(PIR_PIN, PI_INPUT);
-    gpioSetMode(PIR1_PIN, PI_INPUT);
-    gpioSetMode(PIR2_PIN, PI_INPUT);
+    gpioSetPullUpDown(PIR1_PIN, PI_PUD_DOWN);
+    gpioSetPullUpDown(PIR2_PIN, PI_PUD_DOWN);
 #endif
     
     //Load IR Codes
